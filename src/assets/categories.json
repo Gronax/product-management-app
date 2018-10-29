@@ -1,0 +1,26 @@
+[
+    {
+        "code": "100001",
+        "title": "Coffee"
+    },
+    {
+        "code": "100002",
+        "title": "Beverages"
+    },
+    {
+        "code": "100003",
+        "title": "Vegetables"
+    },
+    {
+        "code": "100004",
+        "title": "Fruits"
+    },
+    {
+        "code": "100005",
+        "title": "Dairy"
+    },
+    {
+        "code": "100006",
+        "title": "Bakery"
+    }
+]

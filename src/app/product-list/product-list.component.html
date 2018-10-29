@@ -1,55 +1,33 @@
 <div class="container">
-
-    <input type="text" [(ngModel)]="name" name="name" placeholder="name.." class="form-control">
-    <input type="number" [(ngModel)]="price" name="price" placeholder="price.." class="form-control">
-    <input type="text" [(ngModel)]="description" name="description" placeholder="description.." class="form-control">
-    <input type="number" [(ngModel)]="category" name="category" placeholder="category.." class="form-control">
-    <input type="text" [(ngModel)]="availability" name="availability" placeholder="availability.." class="form-control">
-  
-    <div class="form-group row">
-      <div class="col">
-          <button routerLink="/product-detail" routerLinkActive="active" class="btn btn-primary">Add Product</button>
-      </div>
+  <div class="form-group row">
+    <div class="col">
+      <button routerLink="/product-detail" routerLinkActive="active" class="btn btn-primary">Add Product</button>
     </div>
-    <!-- /.form-group -->
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <thead class="thead-dark">
-          <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Availability</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let product of products | async" (click)="getProduct(product.id)">
-            <td>{{ product.data.name }}</td>
-            <td>{{ product.data.category }}</td>
-            <td>{{ product.data.availability }}</td>
-            <td><button class="btn btn-outline-warning btn-block">Düzelt</button></td>
-            <td><button class="btn btn-outline-danger btn-block" (click)="deleteProduct(product.id)">Sil</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- /.table -->
-    </div>
-    <!-- /.table-responsive -->
-  
-    <!-- <ul *ngFor="let category of categories | async">
-    <li (click)="getCategory(category.id)">
-      <strong>{{ category.data.title }} (<a href="#" (click)="deleteCategory(category.id)">delete</a>)</strong>
-      <br>
-      {{ category.data.content }}
-    </li>
-  </ul> -->
-  
-    <h1>A specific category:</h1>
-  
-    <p><strong>name: </strong>{{ (product | async)?.name }}</p>
-    <p><strong>price: </strong>{{ (product | async)?.price }}</p>
-    <p><strong>description: </strong>{{ (product | async)?.description }}</p>
-    <p><strong>category: </strong>{{ (product | async)?.category }}</p>
-    <p><strong>availability: </strong>{{ (product | async)?.availability }}</p>
   </div>
+  <!-- /.form-group -->
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Availability</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products | async" (click)="getProduct(product.id)">
+          <td>{{ product.data.name }}</td>
+          <td>{{ product.data.category }}</td>
+          <td>{{ product.data.availability }}</td>
+          <td><button class="btn btn-outline-danger btn-block" (click)="openConfirmationDialog(product.id)">Delete</button></td>
+          <td><button class="btn btn-outline-warning btn-block">Edit</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- /.table -->
+  </div>
+  <!-- /.table-responsive -->
+</div>
+  <!-- /.container -->

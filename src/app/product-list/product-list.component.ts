@@ -2,27 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
-
-interface Category {
-  code: number;
-  title: string;
-}
-
-interface CategoryId extends Category {
-  id: string;
-}
-
-interface Product {
-  name: string;
-  price: number;
-  description: string;
-  category: number;
-  availability: boolean;
-}
-
-interface ProductId extends Product {
-  id: string;
-}
+import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
+import { Product } from '../model/model';
 
 @Component({
   selector: 'app-product-list',
@@ -31,7 +12,7 @@ interface ProductId extends Product {
 })
 
 export class ProductListComponent implements OnInit {
-  productCol: AngularFirestoreCollection < Product > ;
+  productCol: AngularFirestoreCollection <Product> ;
   products: any;
 
   name: string;
@@ -39,11 +20,12 @@ export class ProductListComponent implements OnInit {
   description: string;
   category: number;
   availability: boolean;
+  confirmation: boolean;
 
   productDoc: AngularFirestoreDocument <Product> ;
   product: Observable <Product> ;
 
-  constructor(private afs: AngularFirestore) {
+  constructor(private afs: AngularFirestore, private confirmationDialogService: ConfirmationDialogService) {
 
   }
 
@@ -60,22 +42,13 @@ export class ProductListComponent implements OnInit {
       }));
   }
 
-  addProduct() {
-    this.afs.collection('products').add({
-      'name': this.name,
-      'price': this.price,
-      'description': this.description,
-      'category': this.category,
-      'availability': this.availability
-    });
-  }
-
-  getProduct(productId) {
-    this.productDoc = this.afs.doc('products/' + productId);
-    this.product = this.productDoc.valueChanges();
-  }
-
-  deleteProduct(productId) {
-    this.afs.doc('products/' + productId).delete();
+  openConfirmationDialog(productId) {
+    this.confirmationDialogService.confirm('Please confirm.', 'Are you sure, you want to delete this product?')
+    .then((confirmed) => {
+    if (confirmed) {
+        this.afs.doc('products/' + productId).delete();
+      }
+    })
+    .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
   }
 }

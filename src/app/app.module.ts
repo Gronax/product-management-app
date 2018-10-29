@@ -11,6 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from './confirmation-dialog/confirmation-dialog.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HerbsService } from './server/server-component';
 
 // My firebase credentials
 const firebaseConfig = {
@@ -27,16 +32,25 @@ const firebaseConfig = {
     AppComponent,
     PageNotFoundComponent,
     ProductListComponent,
-    ProductDetailComponent
+    ProductDetailComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
-    FormsModule
+    FormsModule,
+    NgbModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    ConfirmationDialogService,
+    HerbsService
+  ],
+  entryComponents: [
+    ConfirmationDialogComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
