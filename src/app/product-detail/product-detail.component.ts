@@ -3,6 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
 import { Category } from '../model/model';
+import { HerbsService } from '../server/server-component';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,26 +22,28 @@ export class ProductDetailComponent implements OnInit {
   description: string;
   category: number;
   availability: boolean;
-  constructor(private afs: AngularFirestore) {}
+  constructor(private afs: AngularFirestore, private _herbService: HerbsService) {}
 
   ngOnInit() {
-    this.categoryCol = this.afs.collection('categories');
+    // this.categoryCol = this.afs.collection('categories');
     // this.categories = this.categoryCol.valueChanges();
-    this.categories = this.categoryCol.snapshotChanges()
-      .pipe(map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data() as Category;
-          const id = a.payload.doc.id;
-          return {
-            id,
-            data
-          };
-        });
-      }));
+    // this.categories = this.categoryCol.snapshotChanges()
+    //   .pipe(map(actions => {
+    //     return actions.map(a => {
+    //       const data = a.payload.doc.data() as Category;
+    //       const id = a.payload.doc.id;
+    //       return {
+    //         id,
+    //         data
+    //       };
+    //     });
+    //   }));
     //   this._herbService.getJSON().subscribe(data => {
-    //     console.log(data);
+    //     this.categories = data;
+    //     console.log(this.categories);
     // });
-    // this._herbService.getJSON().subscribe(resHerbsData => this.herbs = resHerbsData);
+    this._herbService.getJSON().subscribe(resHerbsData => this.categories = resHerbsData);
+    console.log(this.categories);
   }
 
   addProduct() {

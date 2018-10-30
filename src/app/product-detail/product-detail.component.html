@@ -23,9 +23,9 @@
   <div class="form-group row">
     <label for="category" class="col-sm-2 col-form-label">Category</label>
     <div class="col-sm-10">
-      <select class="form-control">
+      <select class="form-control" [(ngModel)]="categories">
         <option value="-1">Select Category</option>
-        <option *ngFor="let category of categories | async" value="{{category.data.code}}">{{category.data.title}}</option>
+        <option *ngFor="let category of categories" value="{{category.code}}">{{category.title}}</option>
       </select>
     </div>
   </div>
