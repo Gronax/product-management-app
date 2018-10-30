@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
-import { Category } from '../model/model';
+import { Category } from '../model/category';
 import { HerbsService } from '../server/server-component';
+import { Product } from '../model/product';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,6 +17,8 @@ export class ProductDetailComponent implements OnInit {
   categories: any;
 
   herbs = [];
+  // product = new Product('this.name', 123, 'this.description', 12132, false);
+  product = new Product('', 0, '', 0, false);
 
   name: string;
   price: number;
@@ -42,18 +45,21 @@ export class ProductDetailComponent implements OnInit {
     //     this.categories = data;
     //     console.log(this.categories);
     // });
-    this._herbService.getJSON().subscribe(resHerbsData => this.categories = resHerbsData);
-    console.log(this.categories);
+    this._herbService.getJSON().subscribe(
+      data => { 
+        this.categories = data;
+      }
+    );
   }
 
   addProduct() {
-    console.log(this.category);
+    console.log(this.product);
     this.afs.collection('products').add({
-      'name': this.name,
-      'price': this.price,
-      'description': this.description,
-      'category': this.category,
-      'availability': this.availability
+      'name': this.product.name,
+      'price': this.product.price,
+      'description': this.product.description,
+      'category': this.product.category,
+      'availability': this.product.availability
     });
   }
 }
