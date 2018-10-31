@@ -3,8 +3,9 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
 import { Category } from '../model/category';
-import { HerbsService } from '../server/server-component';
+import { ProductService } from '../server/server-component';
 import { Product } from '../model/product';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,7 +20,7 @@ export class ProductDetailComponent implements OnInit {
   // product = new Product('this.name', 123, 'this.description', 12132, false);
   product: Product;
 
-  constructor(private afs: AngularFirestore, private _herbService: HerbsService) {}
+  constructor(private db: AngularFirestore, private _productService: ProductService, private _router: ActivatedRoute) {}
 
   ngOnInit() {
     // this.categoryCol = this.afs.collection('categories');
@@ -39,23 +40,42 @@ export class ProductDetailComponent implements OnInit {
     //     this.categories = data;
     //     console.log(this.categories);
     // });
-    this._herbService.getJSON().subscribe(
+    
+    // Getting categories from service method
+    this._productService.getCategories().subscribe(
       data => {
         this.categories = data;
       }
     );
-    this.product = {
-      'name': '',
-      'price': 0,
-      'description': '',
-      'category': -1,
-      'availability': 'false'
-    };
+    // Getting id from the url
+    this._router.paramMap.subscribe(parameterMap => {
+      const id = +parameterMap.get('id');
+      console.log('1: ' + id);
+      this.getProduct(id);
+    });
+  }
+
+  getProduct(id) {
+    console.log('2: ' + id);
+    if (id === 0) {
+      this.product = {
+        'name': '',
+        'price': 0,
+        'description': '',
+        'category': -1,
+        'availability': 'false'
+      };
+    }
+    else{
+      console.log('3: ' + id);
+      console.log(this._productService.getProduct(id));
+      // this.product = this._productService.getProduct(id);
+    }
   }
 
   // save data to firebase db
   onSubmit() {
-    console.log(this.product);
-    this.afs.collection('products').add(this.product);
+    console.log('4: ' + this.product);
+    this.db.collection('products').add(this.product);
   }
 }

@@ -4,6 +4,7 @@ import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 import { Product } from '../model/product';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -25,7 +26,7 @@ export class ProductListComponent implements OnInit {
   productDoc: AngularFirestoreDocument <Product> ;
   product: Observable <Product> ;
 
-  constructor(private afs: AngularFirestore, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private afs: AngularFirestore, private confirmationDialogService: ConfirmationDialogService, private _router: Router) {
 
   }
 
@@ -50,5 +51,9 @@ export class ProductListComponent implements OnInit {
       }
     })
     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+  }
+
+  editProduct(productId) {
+    this._router.navigate(['product-detail', productId]);
   }
 }

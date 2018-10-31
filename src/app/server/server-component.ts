@@ -3,34 +3,33 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { Product } from '../model/product';
 
 @Injectable()
-export class HerbsService {
+export class ProductService {
   private _url = './assets/categories.json';
-  constructor (private http: HttpClient) { }
-
-  getHerbs() {
-    return this.http.get(this._url)
-    .pipe(map((response: Response) => response.json()));
-
-    // return this.httpService.get(this._url).subscribe(
-    //   data => {
-    //     this.arrBirds = data as string [];
-    //     // console.log(this.arrBirds);
-    //   },
-    //   (err: HttpErrorResponse) => {
-    //     console.log (err.message);
-    //   }
-    // );
+  constructor (private http: HttpClient, private db: AngularFirestore) { }
+  productCol: AngularFirestoreCollection <Product> ;
+  products:  Observable<any>;
+  
+  // Getting categories from categories.json file
+  public getCategories(): Observable <any> {
+    return this.http.get(this._url);
   }
 
-  // constructor(private http: HttpClient) {
-  //   this.getJSON().subscribe(data => {
-  //     console.log(data);
-  //   });
-  // }
-
-  public getJSON(): Observable <any> {
-    return this.http.get(this._url);
+  public getProduct(id) {
+    // this.categories = this.categoryCol.valueChanges();
+    // this.productCol = this.db.collection('products');
+    // this.products = this.productCol.doc(id).snapshotChanges()
+    // .pipe(map(res => {
+    //     const data = res.payload.data() as Product;
+    //     return { data };
+    // }));
+    console.log('5: ' + id);
+    console.log(this.db.collection('products').doc(id).valueChanges());
+    // this.products = this.db.collection('products').doc(id).valueChanges();
+    // console.log(this.products);
+    // return this.products;
   }
 }

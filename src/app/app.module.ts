@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogService } from './confirmation-dialog/confirmation-dialog.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HerbsService } from './server/server-component';
+import { ProductService } from './server/server-component';
 
 // My firebase credentials
 const firebaseConfig = {
@@ -46,7 +46,7 @@ const firebaseConfig = {
   ],
   providers: [
     ConfirmationDialogService,
-    HerbsService
+    ProductService
   ],
   entryComponents: [
     ConfirmationDialogComponent

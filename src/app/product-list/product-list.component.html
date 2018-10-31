@@ -1,7 +1,7 @@
 <div class="container">
   <div class="form-group row">
     <div class="col">
-      <button routerLink="/product-detail" routerLinkActive="active" class="btn btn-primary">Add Product</button>
+      <button routerLink="/product-detail/0" routerLinkActive="active" class="btn btn-primary">Add Product</button>
     </div>
   </div>
   <!-- /.form-group -->
@@ -22,7 +22,7 @@
           <td>{{ product.data.category }}</td>
           <td>{{ product.data.availability }}</td>
           <td><button class="btn btn-outline-danger btn-block" (click)="openConfirmationDialog(product.id)">Delete</button></td>
-          <td><button class="btn btn-outline-warning btn-block">Edit</button></td>
+          <td><button class="btn btn-outline-warning btn-block" (click)="editProduct(product.id)">Edit</button></td>
         </tr>
       </tbody>
     </table>
