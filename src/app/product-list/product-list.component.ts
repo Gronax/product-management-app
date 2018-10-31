@@ -3,8 +3,10 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
-import { Product } from '../model/product';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Product } from '../app.model';
+import { config } from '../app.config';
+import { TaskService } from '../server/server-component';
 
 @Component({
   selector: 'app-product-list',
@@ -13,47 +15,30 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class ProductListComponent implements OnInit {
-  productCol: AngularFirestoreCollection <Product> ;
-  products: any;
+  products: Observable < any[] > ;
 
-  name: string;
-  price: number;
-  description: string;
-  category: number;
-  availability: boolean;
-  confirmation: boolean;
-
-  productDoc: AngularFirestoreDocument <Product> ;
-  product: Observable <Product> ;
-
-  constructor(private afs: AngularFirestore, private confirmationDialogService: ConfirmationDialogService, private _router: Router) {
-
-  }
+  constructor(private db: AngularFirestore
+    , private _taskService: TaskService
+    , private confirmationDialogService: ConfirmationDialogService) {}
 
   ngOnInit() {
-    this.productCol = this.afs.collection('products');
-    // this.categories = this.categoryCol.valueChanges();
-    this.products = this.productCol.snapshotChanges()
-      .pipe(map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data() as Product;
-          const id = a.payload.doc.id;
-          return { id, data };
-        });
-      }));
+    // Listing all the products from firebase cloud db
+    // Basic usage
+    // this.products = this.db.collection(config.collection_endpoint).valueChanges();
+    // To access id of the data
+    this.products = this._taskService.getProduct();
   }
 
-  openConfirmationDialog(productId) {
+  // Opens a conformation modal, if user clicks to yes the selected data will be removed from firebase cloud db
+  openConfirmationDialog(product) {
+    const productId = product.id;
     this.confirmationDialogService.confirm('Please confirm.', 'Are you sure, you want to delete this product?')
-    .then((confirmed) => {
-    if (confirmed) {
-        this.afs.doc('products/' + productId).delete();
-      }
-    })
-    .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
-  }
-
-  editProduct(productId) {
-    this._router.navigate(['product-detail', productId]);
+      .then((confirmed) => {
+        // To check if user clicks to yes button
+        if (confirmed) {
+          this._taskService.deleteTask(productId);
+        }
+      })
+      .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
   }
 }

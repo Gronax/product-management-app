@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container mt-3">
   <div class="form-group row">
     <div class="col">
-      <button routerLink="/product-detail/0" routerLinkActive="active" class="btn btn-primary">Add Product</button>
+      <button routerLink="/product-detail" routerLinkActive="active" class="btn btn-primary">Add Product</button>
     </div>
   </div>
   <!-- /.form-group -->
@@ -9,6 +9,7 @@
     <table class="table table-bordered">
       <thead class="thead-dark">
         <tr>
+          <th>#</th>
           <th>Name</th>
           <th>Category</th>
           <th>Availability</th>
@@ -17,12 +18,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of products | async">
+        <tr *ngFor="let product of products | async; let i = index" [attr.data-index]="i">
+          <td>{{i + 1}}</td>
           <td>{{ product.data.name }}</td>
           <td>{{ product.data.category }}</td>
           <td>{{ product.data.availability }}</td>
-          <td><button class="btn btn-outline-danger btn-block" (click)="openConfirmationDialog(product.id)">Delete</button></td>
-          <td><button class="btn btn-outline-warning btn-block" (click)="editProduct(product.id)">Edit</button></td>
+          <td><button class="btn btn-outline-danger btn-block" (click)="openConfirmationDialog(product)">Delete</button></td>
+          <td><button class="btn btn-outline-warning btn-block" [routerLink]="['/product-detail', product.id]">Edit</button></td>
         </tr>
       </tbody>
     </table>
@@ -30,4 +32,4 @@
   </div>
   <!-- /.table-responsive -->
 </div>
-  <!-- /.container -->
+<!-- /.container -->

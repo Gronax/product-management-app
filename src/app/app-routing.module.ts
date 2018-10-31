@@ -7,8 +7,24 @@ import { ProductListComponent } from './product-list/product-list.component';
 
 const routes: Routes = [
   {
-    path: 'product-detail/:id',
-    component: ProductDetailComponent
+    path: 'product-detail',
+    component: ProductDetailComponent,
+    children: [
+      {
+        path: '',
+        component: ProductDetailComponent,
+        children: [
+          {
+            path: ':id',
+            component: ProductDetailComponent
+          },
+          {
+            path: '',
+            component: ProductDetailComponent
+          }
+        ]
+      }
+    ]
   },
   {
     path: 'product-list',
