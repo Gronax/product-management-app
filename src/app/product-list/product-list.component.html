@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of products | async" (click)="getProduct(product.id)">
+        <tr *ngFor="let product of products | async">
           <td>{{ product.data.name }}</td>
           <td>{{ product.data.category }}</td>
           <td>{{ product.data.availability }}</td>

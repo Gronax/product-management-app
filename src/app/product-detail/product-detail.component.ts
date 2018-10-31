@@ -13,18 +13,12 @@ import { Product } from '../model/product';
 })
 
 export class ProductDetailComponent implements OnInit {
-  categoryCol: AngularFirestoreCollection <Category> ;
+  // categoryCol: AngularFirestoreCollection <Category> ;
   categories: any;
 
-  herbs = [];
   // product = new Product('this.name', 123, 'this.description', 12132, false);
-  product = new Product('', 0, '', 0, false);
+  product: Product;
 
-  name: string;
-  price: number;
-  description: string;
-  category: number;
-  availability: boolean;
   constructor(private afs: AngularFirestore, private _herbService: HerbsService) {}
 
   ngOnInit() {
@@ -46,20 +40,22 @@ export class ProductDetailComponent implements OnInit {
     //     console.log(this.categories);
     // });
     this._herbService.getJSON().subscribe(
-      data => { 
+      data => {
         this.categories = data;
       }
     );
+    this.product = {
+      'name': '',
+      'price': 0,
+      'description': '',
+      'category': -1,
+      'availability': 'false'
+    };
   }
 
-  addProduct() {
+  // save data to firebase db
+  onSubmit() {
     console.log(this.product);
-    this.afs.collection('products').add({
-      'name': this.product.name,
-      'price': this.product.price,
-      'description': this.product.description,
-      'category': this.product.category,
-      'availability': this.product.availability
-    });
+    this.afs.collection('products').add(this.product);
   }
 }

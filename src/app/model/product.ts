@@ -5,7 +5,7 @@ export class Product {
     public price: number,
     public description: string,
     public category: number,
-    public availability: boolean
+    public availability: string
   ) {  }
 }
 
@@ -14,7 +14,7 @@ export interface Product {
     price: number;
     description: string;
     category: number;
-    availability: boolean;
+    availability: string;
 }
 
 interface ProductId extends Product {
