@@ -4,16 +4,17 @@ export class Product {
     public price: number,
     public description: string,
     public category: number,
-    public availability: string
+    public availability: boolean
   ) {  }
 }
 
 export interface Product {
+    id?: string;
     name: string;
     price: number;
     description: string;
     category: number;
-    availability: string;
+    availability: boolean;
 }
 
 interface ProductId extends Product {

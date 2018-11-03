@@ -12,8 +12,10 @@ export class TaskService {
   _url = './assets/categories.json';
   productCol: AngularFirestoreCollection < Product > ;
   productDoc: AngularFirestoreDocument < Product > ;
+  products: Observable<Product[]> ;
 
-  constructor(private http: HttpClient, private db: AngularFirestore) {}
+  constructor(private http: HttpClient, private db: AngularFirestore) {
+  }
 
   // Getting categories from categories.json file
   getCategories(): Observable < any > {
@@ -31,43 +33,28 @@ export class TaskService {
   //     }));
   // }
 
-  getProduct(key?) {
-    //  if (id != null && id !== '0') {
-    //   return this.db.doc < Product > (`${config.collection_endpoint}/${id}`);
-    //  } else {
-    //   return this.db.doc < Product > (config.collection_endpoint);
-    //   return this.db.collection(config.collection_endpoint).valueChanges();
-    //  }
-    console.log(key);
-    if (key != null && key !== '0') {
-      return this.db
-        .collection(`${config.collection_endpoint}/${key}`)
-        .snapshotChanges()
-        .pipe(map(actions => {
-          return actions.map(a => {
-            const data = a.payload.doc.data() as Product;
-            const id = a.payload.doc.id;
-            return {
-              id,
-              data
-            };
-          });
-        }));
-    } else {
-      return this.db
-        .collection(config.collection_endpoint)
-        .snapshotChanges()
-        .pipe(map(actions => {
-          return actions.map(a => {
-            const data = a.payload.doc.data() as Product;
-            const id = a.payload.doc.id;
-            return {
-              id,
-              data
-            };
-          });
-        }));
-    }
+  getProducts() {
+    this.productCol = this.db.collection(config.collection_endpoint);
+    this.products = this.productCol.snapshotChanges().pipe(map(changes => {
+      return changes.map(a => {
+        const data = a.payload.doc.data() as Product;
+        data.id = a.payload.doc.id;
+        return data;
+      });
+    }));
+    return this.products;
+  }
+
+  getProduct(id: string): Observable<any> {
+    this.productCol = this.db.collection(config.collection_endpoint);
+    this.products = this.productCol.snapshotChanges().pipe(map(changes => {
+      return changes.map(a => {
+        const data = a.payload.doc.data() as Product;
+        data.id = a.payload.doc.id;
+        return data;
+      });
+    }));
+    return this.products;
   }
 
   addProduct(product) {
@@ -79,7 +66,7 @@ export class TaskService {
     this.productDoc.update(product);
   }
 
-  deleteTask(id) {
+  deleteProduct(id) {
     this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${id}`);
     this.productDoc.delete();
   }

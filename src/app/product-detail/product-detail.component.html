@@ -1,17 +1,17 @@
 <div class="container mt-3">
   <a routerLink="/product-list" routerLinkActive="active" class="btn btn-dark">Back to list</a>
-  <form #productForm="ngForm" (ngSubmit)="saveProduct()">
+  <form #productForm="ngForm" (ngSubmit)="onSubmit()">
     <div class="form-group row">
       <label for="name" class="col-sm-2 col-form-label">Name</label>
       <div class="col-sm-10">
-        <input type="text" id="name" name="name" ngControl="name" class="form-control" placeholder="Name" required>
+        <input type="text" id="name" name="name" #name="ngModel" ngControl="name" [(ngModel)]="product.name" class="form-control" placeholder="Name" required>
       </div>
     </div>
     <!-- /.form-group -->
     <div class="form-group row">
       <label for="price" class="col-sm-2 col-form-label">Price</label>
       <div class="col-sm-10">
-        <input type="number" id="price" name="price" ngControl="price" class="form-control" placeholder="Price"
+        <input type="number" id="price" name="price" #price="ngModel" ngControl="price" [(ngModel)]="product.price" class="form-control" placeholder="Price"
           required>
       </div>
     </div>
@@ -19,7 +19,7 @@
     <div class="form-group row">
       <label for="description" class="col-sm-2 col-form-label">Description</label>
       <div class="col-sm-10">
-        <textarea id="description" name="description" ngControl="description" rows="5" class="form-control" placeholder="Description"
+        <textarea id="description" name="description" #description="ngModel" ngControl="description" [(ngModel)]="product.description" rows="5" class="form-control" placeholder="Description"
           required></textarea>
       </div>
     </div>
@@ -27,7 +27,7 @@
     <div class="form-group row">
       <label for="category" class="col-sm-2 col-form-label">Category</label>
       <div class="col-sm-10">
-        <select id="category" name="category" class="form-control">
+        <select id="category" name="category" [(ngModel)]="product.category" class="form-control">
           <option value="-1">Select Category</option>
           <option *ngFor="let category of categories" [value]="category.code">{{category.title}}</option>
         </select>
@@ -38,11 +38,11 @@
       <legend class="col-sm-2 col-form-label pt-0">Availability</legend>
       <div class="col-sm-10">
         <div class="custom-control custom-radio custom-control-inline">
-          <input class="custom-control-input" type="radio" value="false" id="availability0" name="availability">
+          <input class="custom-control-input" type="radio" [value]="false" id="availability0" [(ngModel)]="product.availability" name="availability">
           <label class="custom-control-label" for="availability0">Not Available</label>
         </div>
         <div class="custom-control custom-radio custom-control-inline">
-          <input class="custom-control-input" type="radio" value="true" id="availability1" name="availability">
+          <input class="custom-control-input" type="radio" [value]="true" id="availability1" [(ngModel)]="product.availability" name="availability">
           <label class="custom-control-label" for="availability1">Available</label>
         </div>
       </div>

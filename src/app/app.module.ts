@@ -15,17 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogService } from './confirmation-dialog/confirmation-dialog.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TaskService } from './server/server-component';
-
-// My firebase credentials
-const firebaseConfig = {
-  apiKey: 'AIzaSyB0uA78TrBJw37iH8dnXMWziYyK7zCpzDg',
-  authDomain: 'product-management-c31f2.firebaseapp.com',
-  databaseURL: 'https://product-management-c31f2.firebaseio.com',
-  projectId: 'product-management-c31f2',
-  storageBucket: 'product-management-c31f2.appspot.com',
-  messagingSenderId: '656559457760'
-};
+import { TaskService } from './services/task.service';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -39,7 +30,7 @@ const firebaseConfig = {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     FormsModule,
     NgbModule.forRoot()

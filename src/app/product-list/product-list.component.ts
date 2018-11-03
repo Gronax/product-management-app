@@ -6,7 +6,7 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
 import { Router, ActivatedRoute } from '@angular/router';
 import { Product } from '../app.model';
 import { config } from '../app.config';
-import { TaskService } from '../server/server-component';
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-product-list',
@@ -15,7 +15,8 @@ import { TaskService } from '../server/server-component';
 })
 
 export class ProductListComponent implements OnInit {
-  products: Observable < any[] > ;
+  products: Product[];
+  // products: Observable < any[] > ;
 
   constructor(private db: AngularFirestore
     , private _taskService: TaskService
@@ -26,7 +27,12 @@ export class ProductListComponent implements OnInit {
     // Basic usage
     // this.products = this.db.collection(config.collection_endpoint).valueChanges();
     // To access id of the data
-    this.products = this._taskService.getProduct();
+
+    this._taskService.getProducts().subscribe(products => {
+      console.log(products);
+      this.products = products;
+    });
+    // this.products = this._taskService.getProducts();
   }
 
   // Opens a conformation modal, if user clicks to yes the selected data will be removed from firebase cloud db
@@ -36,7 +42,7 @@ export class ProductListComponent implements OnInit {
       .then((confirmed) => {
         // To check if user clicks to yes button
         if (confirmed) {
-          this._taskService.deleteTask(productId);
+          this._taskService.deleteProduct(productId);
         }
       })
       .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
