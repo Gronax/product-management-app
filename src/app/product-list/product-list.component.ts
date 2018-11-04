@@ -29,7 +29,6 @@ export class ProductListComponent implements OnInit {
     // To access id of the data
 
     this._taskService.getProducts().subscribe(products => {
-      console.log(products);
       this.products = products;
     });
     // this.products = this._taskService.getProducts();

@@ -13,18 +13,18 @@ import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Valida
 })
 
 export class ProductDetailComponent implements OnInit {
-  product: Product = {
-    name: '',
-    price: 0,
-    description: '',
-    category: -1,
-    availability: false
-  };
+  // product: Product = {
+  //   name: '',
+  //   price: 0,
+  //   description: '',
+  //   category: -1,
+  //   availability: false
+  // };
   categories: any;
-  products: Observable < any[] > ;
+  product: Product;
   myProduct: string;
   editMode = false;
-  productToEdit: any = {};
+  editedProduct: Product;
   // productForm: FormGroup;
 
   constructor(private _taskService: TaskService
@@ -32,6 +32,7 @@ export class ProductDetailComponent implements OnInit {
     , private _route: ActivatedRoute) {}
 
   ngOnInit() {
+    // console.log(this._route.snapshot.params['id']);
     // this.getProduct(this._route.snapshot.params['id']);
     // this.productForm = this._formBuilder.group({
     //   'name' : [null, Validators.required],
@@ -48,13 +49,30 @@ export class ProductDetailComponent implements OnInit {
       }
     );
 
+    // const key = this._route.snapshot.params['id'];
+    // if (key != null && key !== '') {
+    //   this._taskService.getProduct(key).subscribe(data => {
+    //     console.log(data);
+    //     this.product = data;
+    //   });
+    // }
+    // console.log(this.product);
     // Getting id from the url and setting
-    // this._router.paramMap.subscribe(parameterMap => {
-    //   const key = parameterMap.get('id');
-    //   console.log('1: ' + key);
-    //     // this.product = this._taskService.getProducts();
-    //     // if (key != null && key !== '') {}
-    // });
+    this._route.paramMap.subscribe(parameterMap => {
+      const key = parameterMap.get('id');
+      if (key != null && key !== '') {
+        this._taskService.getProduct(key).subscribe(data => {
+          console.log('data');
+          console.log(data);
+          this.product = data;
+        });
+        console.log('this.products');
+        console.log(this.product);
+      } else {
+        this.product = null;
+      }
+      console.log(this.product);
+    });
   }
 
   // getProduct(id) {
@@ -68,18 +86,21 @@ export class ProductDetailComponent implements OnInit {
   //   });
   // }
 
-  edit(product) {
+  edit(product: Product) {
     console.log(product);
     // Set taskToEdit and editMode
-    this.productToEdit = product;
+    this.editedProduct = product;
     this.editMode = true;
     // Set form value
     this.myProduct = product.description;
   }
 
-  onSubmit() {
-    if (this.product != null) {
+  onSubmit(form: NgForm) {
+    console.log(form.value);
+    if (!this.editMode) {
       this._taskService.addProduct(this.product);
+    } else {
+      this._taskService.updateProduct(this.editedProduct);
     }
   }
   // save new data or edit current data on firebase db

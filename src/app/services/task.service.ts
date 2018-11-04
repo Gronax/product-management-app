@@ -12,57 +12,53 @@ export class TaskService {
   _url = './assets/categories.json';
   productCol: AngularFirestoreCollection < Product > ;
   productDoc: AngularFirestoreDocument < Product > ;
-  products: Observable<Product[]> ;
+  products: Observable < Product[] > ;
+  product: Observable < Product > ;
 
-  constructor(private http: HttpClient, private db: AngularFirestore) {
-  }
+  constructor(private http: HttpClient, private db: AngularFirestore) {}
 
   // Getting categories from categories.json file
   getCategories(): Observable < any > {
     return this.http.get(this._url);
   }
 
-  // getCollection(ref?: QueryFn): Observable<Product[]> {
-  //   return this.db.collection<Product>(config.collection_endpoint, ref)
-  //     .snapshotChanges().pipe(map(actions => {
-  //       return actions.map(a => {
-  //         const data = a.payload.doc.data() as Product;
-  //         const id = a.payload.doc.id;
-  //         return { id, ...data };
-  //       });
-  //     }));
-  // }
-
   getProducts() {
-    this.productCol = this.db.collection(config.collection_endpoint);
-    this.products = this.productCol.snapshotChanges().pipe(map(changes => {
-      return changes.map(a => {
+    // this.productCol = this.db.collection<Product>(config.collection_endpoint, ref => {
+    //   let query: firebase.firestore.Query = ref;
+    //   query = query.where('key', '==', 'MBUDtC6vVdNA9SSzPCJh');
+    //   return query;
+    // });
+    this.productCol = this.db.collection < Product > (config.collection_endpoint);
+    this.products = this.productCol.snapshotChanges()
+    .pipe(
+      map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Product;
         data.id = a.payload.doc.id;
-        return data;
-      });
-    }));
+        return { ...data
+        };
+      }))
+    );
     return this.products;
   }
 
-  getProduct(id: string): Observable<any> {
-    this.productCol = this.db.collection(config.collection_endpoint);
-    this.products = this.productCol.snapshotChanges().pipe(map(changes => {
-      return changes.map(a => {
-        const data = a.payload.doc.data() as Product;
-        data.id = a.payload.doc.id;
-        return data;
-      });
-    }));
-    return this.products;
+  getProduct(id: string) {
+    this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${id}`);
+    this.product = this.productDoc.snapshotChanges()
+      .pipe(map(action => {
+        const data = action.payload.data() as Product;
+        data.id = action.payload.id;
+        return { ...data
+        };
+      }));
+    return this.product;
   }
 
   addProduct(product) {
     this.productCol.add(product);
   }
 
-  updateProduct(id, product) {
-    this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${id}`);
+  updateProduct(product) {
+    this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${product.id}`);
     this.productDoc.update(product);
   }
 

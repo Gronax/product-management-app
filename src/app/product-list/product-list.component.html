@@ -24,7 +24,7 @@
           <td>{{ product.category }}</td>
           <td>{{ product.availability }}</td>
           <td><button class="btn btn-outline-danger btn-block" (click)="openConfirmationDialog(product)">Delete</button></td>
-          <td><button class="btn btn-outline-warning btn-block" [routerLink]="['/product-detail', product.id]">Edit</button></td>
+          <td><button class="btn btn-outline-warning btn-block" [routerLink]="['/product-detail', { id: product.id }]">Edit</button></td>
         </tr>
       </tbody>
     </table>
