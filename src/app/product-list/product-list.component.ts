@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
-import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
-import { map, filter, switchMap } from 'rxjs/operators';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Product } from '../app.model';
-import { config } from '../app.config';
 import { TaskService } from '../services/task.service';
 
 @Component({
@@ -16,22 +11,15 @@ import { TaskService } from '../services/task.service';
 
 export class ProductListComponent implements OnInit {
   products: Product[];
-  // products: Observable < any[] > ;
 
-  constructor(private db: AngularFirestore
-    , private _taskService: TaskService
+  constructor(private _taskService: TaskService
     , private confirmationDialogService: ConfirmationDialogService) {}
 
   ngOnInit() {
-    // Listing all the products from firebase cloud db
-    // Basic usage
-    // this.products = this.db.collection(config.collection_endpoint).valueChanges();
-    // To access id of the data
-
+    // Getting all product list from service
     this._taskService.getProducts().subscribe(products => {
       this.products = products;
     });
-    // this.products = this._taskService.getProducts();
   }
 
   // Opens a conformation modal, if user clicks to yes the selected data will be removed from firebase cloud db

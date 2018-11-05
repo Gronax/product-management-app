@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import { map, filter, switchMap } from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection, QueryFn } from 'angularfire2/firestore';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Product } from '../app.model';
 import { config } from '../app.config';
 
@@ -22,12 +21,8 @@ export class TaskService {
     return this.http.get(this._url);
   }
 
+  // Get all products
   getProducts() {
-    // this.productCol = this.db.collection<Product>(config.collection_endpoint, ref => {
-    //   let query: firebase.firestore.Query = ref;
-    //   query = query.where('key', '==', 'MBUDtC6vVdNA9SSzPCJh');
-    //   return query;
-    // });
     this.productCol = this.db.collection < Product > (config.collection_endpoint);
     this.products = this.productCol.snapshotChanges()
     .pipe(
@@ -41,6 +36,7 @@ export class TaskService {
     return this.products;
   }
 
+  // Get single product
   getProduct(id: string) {
     this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${id}`);
     this.product = this.productDoc.snapshotChanges()
@@ -53,17 +49,23 @@ export class TaskService {
     return this.product;
   }
 
+  // Add single product
   addProduct(product) {
     this.productCol.add(product);
+    console.log('Adding process is completed.');
   }
 
-  updateProduct(product) {
-    this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${product.id}`);
+  // Update single product
+  updateProduct(id, product) {
+    this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${id}`);
     this.productDoc.update(product);
+    console.log('Updating process is completed.');
   }
 
+  // Delete single product
   deleteProduct(id) {
     this.productDoc = this.db.doc < Product > (`${config.collection_endpoint}/${id}`);
     this.productDoc.delete();
+    console.log('Deleting process is completed.');
   }
 }

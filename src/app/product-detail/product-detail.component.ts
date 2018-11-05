@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, Subject, ReplaySubject, from, of, range } from 'rxjs';
-import { map, filter, switchMap } from 'rxjs/operators';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Product } from '../app.model';
 import { TaskService } from '../services/task.service';
-import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-product-detail',
@@ -13,35 +11,17 @@ import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Valida
 })
 
 export class ProductDetailComponent implements OnInit {
-  // product: Product = {
-  //   name: '',
-  //   price: 0,
-  //   description: '',
-  //   category: -1,
-  //   availability: false
-  // };
+  @Output() formReady = new EventEmitter<FormGroup>();
+  productForm: FormGroup;
   categories: any;
-  product: Product;
-  myProduct: string;
   editMode = false;
   editedProduct: Product;
-  // productForm: FormGroup;
 
   constructor(private _taskService: TaskService
-    , private _router: Router
-    , private _route: ActivatedRoute) {}
+    , private _route: ActivatedRoute
+    , private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
-    // console.log(this._route.snapshot.params['id']);
-    // this.getProduct(this._route.snapshot.params['id']);
-    // this.productForm = this._formBuilder.group({
-    //   'name' : [null, Validators.required],
-    //   'price' : [null, Validators.required],
-    //   'description' : [null, Validators.required],
-    //   'category' : [null, Validators.required],
-    //   'availability' : [null, Validators.required]
-    // });
-
     // Getting categories from service method
     this._taskService.getCategories().subscribe(
       data => {
@@ -49,80 +29,42 @@ export class ProductDetailComponent implements OnInit {
       }
     );
 
-    // const key = this._route.snapshot.params['id'];
-    // if (key != null && key !== '') {
-    //   this._taskService.getProduct(key).subscribe(data => {
-    //     console.log(data);
-    //     this.product = data;
-    //   });
-    // }
-    // console.log(this.product);
-    // Getting id from the url and setting
+    // Setting product form to default values
+    this.productForm = this._formBuilder.group({
+      name: [null, Validators.required],
+      price : [null, Validators.required],
+      description : [null, Validators.required],
+      category : [-1, Validators.required],
+      availability : [null, Validators.required]
+    });
+
+    // Getting id from the url and setting values
     this._route.paramMap.subscribe(parameterMap => {
       const key = parameterMap.get('id');
       if (key != null && key !== '') {
         this._taskService.getProduct(key).subscribe(data => {
-          console.log('data');
-          console.log(data);
-          this.product = data;
+          // Set values to inputs
+          this.productForm.setValue({
+            name: data.name,
+            price: data.price,
+            description: data.description,
+            category: data.category,
+            availability: data.availability
+          });
+          // Set editedProduct and editMode
+          this.editedProduct = data;
+          this.editMode = true;
         });
-        console.log('this.products');
-        console.log(this.product);
-      } else {
-        this.product = null;
       }
-      console.log(this.product);
     });
   }
 
-  // getProduct(id) {
-  //   this._taskService.getProduct(id).subscribe(data => {
-  //     this.product.id = data.key;
-  //     this.productForm.setValue({
-  //       title: data.title,
-  //       description: data.description,
-  //       author: data.author
-  //     });
-  //   });
-  // }
-
-  edit(product: Product) {
-    console.log(product);
-    // Set taskToEdit and editMode
-    this.editedProduct = product;
-    this.editMode = true;
-    // Set form value
-    this.myProduct = product.description;
-  }
-
+  // Adding new product or updating selected one
   onSubmit(form: NgForm) {
-    console.log(form.value);
-    if (!this.editMode) {
-      this._taskService.addProduct(this.product);
+    if (this.editMode) {
+      this._taskService.updateProduct(this.editedProduct.id, form.value);
     } else {
-      this._taskService.updateProduct(this.editedProduct);
+      this._taskService.addProduct(form.value);
     }
   }
-  // save new data or edit current data on firebase db
-  // saveProduct() {
-  //   console.log(this.myProduct);
-  //   if (this.myProduct !== null) {
-  //     // Get the input value
-  //     const product = {
-  //       description: this.myProduct
-  //     };
-  //     if (!this.editMode) {
-  //       console.log(product);
-  //       this._taskService.addProduct(product);
-  //     } else {
-  //       // Get the task id
-  //       const productId = this.productToEdit.id;
-  //       // update the task
-  //       this._taskService.updateProduct(productId, product);
-  //     }
-  //     // set edit mode to false and clear form
-  //     this.editMode = false;
-  //     this.myProduct = '';
-  //   }
-  // }
 }
