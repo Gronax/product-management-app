@@ -17,10 +17,6 @@ export interface Product {
     availability: boolean;
 }
 
-interface ProductId extends Product {
-    id: string;
-}
-
 export class Category {
   constructor(
     public code: number,
@@ -31,8 +27,4 @@ export class Category {
 export interface Category {
     code: number;
     title: string;
-}
-
-interface CategoryId extends Category {
-    id: string;
 }
