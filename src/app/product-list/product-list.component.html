@@ -21,7 +21,7 @@
         <tr *ngFor="let product of products; let i = index" [attr.data-index]="i">
           <td>{{i + 1}}</td>
           <td>{{ product.name }}</td>
-          <td>{{ product.category }}</td>
+          <td>{{ product.category | category }}</td>
           <td>{{ product.availability | availability }}</td>
           <td><button class="btn btn-outline-danger btn-block" (click)="openConfirmationDialog(product)">Delete</button></td>
           <td><button class="btn btn-outline-warning btn-block" [routerLink]="['/product-detail', { id: product.id }]">Edit</button></td>

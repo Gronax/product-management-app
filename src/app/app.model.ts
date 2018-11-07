@@ -3,7 +3,7 @@ export class Product {
     public name: string,
     public price: number,
     public description: string,
-    public category: number,
+    public category: string,
     public availability: boolean
   ) {  }
 }
@@ -13,18 +13,18 @@ export interface Product {
     name: string;
     price: number;
     description: string;
-    category: number;
+    category: string;
     availability: boolean;
 }
 
 export class Category {
   constructor(
-    public code: number,
+    public code: string,
     public title: string,
   ) {  }
 }
 
 export interface Category {
-    code: number;
+    code: string;
     title: string;
 }

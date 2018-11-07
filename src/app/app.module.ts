@@ -17,7 +17,7 @@ import { ConfirmationDialogService } from './confirmation-dialog/confirmation-di
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskService } from './services/task.service';
 import { environment } from 'src/environments/environment';
-import { AvailabilityPipe } from './app.pipe';
+import { AvailabilityPipe, CategoryPipe } from './app.pipe';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,8 @@ import { AvailabilityPipe } from './app.pipe';
     ProductListComponent,
     ProductDetailComponent,
     ConfirmationDialogComponent,
-    AvailabilityPipe
+    AvailabilityPipe,
+    CategoryPipe
   ],
   imports: [
     BrowserModule,
